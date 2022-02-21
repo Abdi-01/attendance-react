@@ -34,7 +34,7 @@ class LoginPage extends React.Component {
     render() {
         // untuk redirect ke halaman selanjutnya
         if (this.state.redirect) {
-            return <Navigate to='/test' />
+            return <Navigate to='/dashboard' />
         }
         return (
             <div className='d-flex' style={{ padding: '10%' }}>

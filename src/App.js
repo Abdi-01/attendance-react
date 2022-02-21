@@ -5,8 +5,11 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/Register';
 // import Dashboard from './pages/Dashboard';
 import { keepLogin } from './redux/actions'
+import { getStudentSessionAction } from './redux/actions';
+import DashboardAttend from './pages/DashboardAttend';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-calendar/dist/Calendar.css'
 import ManageSession from './pages/ManageSession';
 import { Route, Routes } from 'react-router';
 import Sidebar from './components/Sidebar';
@@ -33,6 +36,7 @@ class App extends React.Component {
             <Route path="/" element={<LoginPage />} />
             <Route path="/session" element={<ManageSession />} />
             <Route path='/register' element={<RegisterPage />} />
+            <Route path='/dashboard' element={<DashboardAttend />} />
             {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           </Routes>
         </div>
@@ -47,4 +51,4 @@ const maptoprops = (state) => {
   }
 }
 
-export default connect(maptoprops, { keepLogin })(App);
+export default connect(maptoprops, { keepLogin, getStudentSessionAction })(App);
