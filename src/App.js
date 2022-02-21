@@ -1,23 +1,33 @@
 import logo from './logo.svg';
 import './App.css';
+import 'react-pro-sidebar/dist/css/styles.css';
+import 'react-calendar/dist/Calendar.css'
+import SidebarComponent from './components/Sidebar';
+import DashboardAttend from './pages/DashboardAttend';
+import {Routes, Route} from 'react-router'
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { getStudentSessionAction } from './redux/actions';
 
 function App() {
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    // get data session student yang sedang login
+    // dispatch(getStudentSessionAction()) 
+  },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='row g-0'>
+      <div className='col-md-3'>
+        <SidebarComponent />
+      </div>
+      <div className='col-md-9'>
+        <Routes>
+          <Route path='/attendance' element={<DashboardAttend/>}/>
+        </Routes>
+      </div>
     </div>
   );
 }
