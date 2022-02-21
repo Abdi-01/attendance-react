@@ -3,6 +3,7 @@ import React from 'react';
 import { ProSidebar, Menu, MenuItem, SubMenu, SidebarHeader, SidebarContent } from 'react-pro-sidebar';
 import { connect } from 'react-redux';
 import 'react-pro-sidebar/dist/css/styles.css';
+import { Link } from 'react-router-dom';
 
 class Sidebar extends React.Component {
     constructor(props) {
@@ -23,14 +24,20 @@ class Sidebar extends React.Component {
                 </SidebarHeader>
                 <SidebarContent>
                     <Menu>
-                        <MenuItem >Dashboard</MenuItem>
+                        <MenuItem ><Link to='/dashboard'>
+                            Dashboard
+                        </Link></MenuItem>
                         <MenuItem >Attendance List</MenuItem>
                         <MenuItem >My Profile</MenuItem>
                         {
                             this.props.data.role == "admin" &&
                             <>
                                 <MenuItem >Student Attendance</MenuItem>
-                                <MenuItem >Sessions</MenuItem>
+                                <MenuItem >
+                                    <Link to='/session'>
+                                        Sessions
+                                    </Link>
+                                </MenuItem>
                                 <MenuItem >Registration Student</MenuItem>
                             </>
                         }
