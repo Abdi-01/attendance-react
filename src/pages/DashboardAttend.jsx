@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button } from 'reactstrap'
-import Clock from 'react-live-clock';
+// import Clock from 'react-live-clock';
 import Calendar from 'react-calendar';
 import iconCheckIn from '../assets/Component 2.png'
 import iconSession from '../assets/Component 1.png'
@@ -95,15 +95,15 @@ const DashboardAttend = () => {
                             <div className='p-4 text-center '>
                                 <div className='mt-3'>
                                     <h2>
-                                        <Clock date={`${tanggal}`} format={'dddd, DD MMMM YYYY'} />
+                                        {/* <Clock date={`${tanggal}`} format={'dddd, DD MMMM YYYY'} /> */}
                                     </h2>
                                 </div>
                                 <div>
-                                    <h1 style={{ fontWeight: 'bolder', color: '#7C7B7D', fontSize: '5vw' }}>
+                                    {/* <h1 style={{ fontWeight: 'bolder', color: '#7C7B7D', fontSize: '5vw' }}>
                                         <Clock
                                             format="HH:mm:ss" interval={1000} ticking={true}
                                         />
-                                    </h1>
+                                    </h1> */}
                                 </div>
                             </div>
                             <div className='d-flex justify-content-evenly'>
