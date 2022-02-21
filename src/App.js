@@ -32,7 +32,6 @@ class App extends React.Component {
           this.props.data.fullname &&
           <Sidebar />
         }
-        <div>
           <Routes>
             <Route path="/" element={<LoginPage />} />
             {
@@ -48,7 +47,6 @@ class App extends React.Component {
             <Route path='*' element={<ErrorPage />} />
             {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           </Routes>
-        </div>
       </div>
     );
   }
