@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { Button, FormGroup, Input, Label } from 'reactstrap';
 import { API_URL } from '../helper';
 import { sidebarAction } from '../redux/actions';
+import { Navigate } from 'react-router-dom';
+import {logoutAction} from '../redux/actions'
 
 class RegisterPage extends React.Component {
     constructor(props) {
@@ -12,7 +14,8 @@ class RegisterPage extends React.Component {
             selectedGender: "",
             images: null,
             radioCheckedMale: false,
-            radioCheckedFemale: false
+            radioCheckedFemale: false,
+            redirect : false
         }
     }
     componentDidMount() {
@@ -90,12 +93,21 @@ class RegisterPage extends React.Component {
         this.imagesRegis.value = ""
     }
 
+    btnLogout =()=>{
+        localStorage.removeItem('data');
+        this.props.logoutAction();
+        this.setState({redirect:true});
+    }
+
     render() {
+        if(this.state.redirect){
+            return <Navigate to="/" />
+        }
         return (
             <div className='container'>
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
                     <h1>Regis Student</h1>
-                    <Button outline color='danger' style={{ width: "100px", height: "40px" }}>Logout</Button>
+                    <Button outline color='danger' style={{ width: "100px", height: "40px" }} onClick={this.btnLogout} >Logout</Button>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
                     <div>
@@ -178,4 +190,4 @@ class RegisterPage extends React.Component {
     }
 }
 
-export default connect(null, { sidebarAction })(RegisterPage);
+export default connect(null, { sidebarAction,logoutAction })(RegisterPage);
