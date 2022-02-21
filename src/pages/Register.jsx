@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React from 'react';
+import { connect } from 'react-redux';
 import { Button, FormGroup, Input, Label } from 'reactstrap';
 import { API_URL } from '../helper';
+import { sidebarAction } from '../redux/actions';
 
 class RegisterPage extends React.Component {
     constructor(props) {
@@ -13,7 +15,9 @@ class RegisterPage extends React.Component {
             radioCheckedFemale: false
         }
     }
-
+    componentDidMount() {
+        this.props.sidebarAction('/register')
+    }
     handleImages = (e) => {
         this.setState({ images: { name: e.target.files[0].name, file: e.target.files[0] } })
     }
@@ -174,4 +178,4 @@ class RegisterPage extends React.Component {
     }
 }
 
-export default RegisterPage;
+export default connect(null, { sidebarAction })(RegisterPage);

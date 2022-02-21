@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Button, FormGroup, Input, Label, Table } from 'reactstrap'
 import SidebarComp from '../components/Sidebar';
 import { API_URL } from '../helper';
-import { deleteSession, getSessionAction } from '../redux/actions';
+import { deleteSession, getSessionAction, sidebarAction } from '../redux/actions';
 class ManageSession extends React.Component {
     constructor(props) {
         super(props);
@@ -12,8 +12,10 @@ class ManageSession extends React.Component {
             selectedIdx: null
         }
     }
+    
     componentDidMount() {
         this.props.getSessionAction()
+        this.props.sidebarAction('/session')
     }
     printSession = () => {
         return this.props.session.map((value, index) => {
@@ -164,4 +166,4 @@ const mapToProps = (state) => {
         session: state.sessionReducer.session
     }
 }
-export default connect(mapToProps, { getSessionAction, deleteSession })(ManageSession);
+export default connect(mapToProps, { getSessionAction, deleteSession,sidebarAction })(ManageSession);

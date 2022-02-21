@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from 'reactstrap'
 import Clock from 'react-live-clock';
 import Calendar from 'react-calendar';
@@ -9,6 +9,8 @@ import iconAvaVespa from '../assets/avatar_vespa.png'
 import axios from 'axios';
 import { API_URL } from '../helper';
 import { useSelector } from 'react-redux';
+import { sidebarAction } from '../redux/actions';
+import { useDispatch } from 'react-redux';
 
 const DashboardAttend = () => {
 
@@ -17,35 +19,37 @@ const DashboardAttend = () => {
     let est = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
     const [tanggal, setTanggal] = useState(est);
     const [calendar, setCalendar] = useState(new Date());
-    const [idattendance,setIdAttendance] = useState(null);
-
+    const [idattendance, setIdAttendance] = useState(null);
+    let dispatch = useDispatch()
     //ambil data session student dari reducer
     // const {dataSession} = useSelector((state) => {
     //     return {
     //         dataSession : state.attendanceReducer.dataSessionStudent
     //     } 
     // })
-
+    useEffect(() => {
+     dispatch(sidebarAction('/dashboard'))
+    },[])
     const onBtCheckIn = async () => {
 
         let time = new Date()
-        let checkin = time.getHours()+':'+time.getMinutes()+':'+time.getSeconds();
-        
+        let checkin = time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
+
         let data = {
             date: tanggal,
             checkin: checkin
         }
         try {
             let token = localStorage.getItem('data');
-            if(token) {
+            if (token) {
 
-                let res = await axios.post(`${API_URL}/attendance/checkin`,data,{
+                let res = await axios.post(`${API_URL}/attendance/checkin`, data, {
                     headers: {
-                        'Athorization' : `Bearer ${token}`
+                        'Athorization': `Bearer ${token}`
                     }
                 })
 
-                if(res.data.succes) {
+                if (res.data.succes) {
                     //set idattendance ke state idattendance untuk keperluan checkout
                     setIdAttendance(res.data.data_IdAttendance)
                 }
@@ -58,8 +62,8 @@ const DashboardAttend = () => {
     const onBtCheckOut = async () => {
 
         let time = new Date()
-        let checkout = time.getHours()+':'+time.getMinutes()+':'+time.getSeconds()
-        
+        let checkout = time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
+
         try {
             let res = await axios.patch(`${API_URL}/attendance/checkout/${idattendance}`, checkout)
         } catch (error) {
@@ -143,7 +147,7 @@ const DashboardAttend = () => {
                 </div>
                 <div className='my-5'>
                     <div>
-                        <Calendar onChange={setCalendar} value={calendar}  />
+                        <Calendar onChange={setCalendar} value={calendar} />
                     </div>
                 </div>
             </div>
