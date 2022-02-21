@@ -38,7 +38,11 @@ class Sidebar extends React.Component {
                                         Sessions
                                     </Link>
                                 </MenuItem>
-                                <MenuItem >Registration Student</MenuItem>
+                                <MenuItem >
+                                    <Link to='/register'>
+                                        Registration Student
+                                    </Link>
+                                </MenuItem>
                             </>
                         }
                     </Menu>
