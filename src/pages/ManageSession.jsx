@@ -1,15 +1,18 @@
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import { Button, FormGroup, Input, Label, Table } from 'reactstrap'
 import SidebarComp from '../components/Sidebar';
 import { API_URL } from '../helper';
 import { deleteSession, getSessionAction } from '../redux/actions';
+import {logoutAction} from '../redux/actions'
 class ManageSession extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedIdx: null
+            selectedIdx: null,
+            redirect : false
         }
     }
     componentDidMount() {
@@ -99,7 +102,16 @@ class ManageSession extends React.Component {
         let temp = [...this.props.session]
         this.props.deleteSession(temp[index].idsession)
     }
+    btnLogout =()=>{
+        localStorage.removeItem('data');
+        this.props.logoutAction();
+        this.setState({redirect:true});
+        
+    }
     render() {
+        if(this.state.redirect){
+            return <Navigate to="/"/>
+        }
         return (
             <div className="container-fluid">
                 {/* <div className="row"> */}
@@ -110,7 +122,7 @@ class ManageSession extends React.Component {
                     <div className="p-3">
                         <div className="d-flex" style={{ justifyContent: 'space-between', marginBottom: 20 }}>
                             <h2>Manage Sessions</h2>
-                            <Button outline color="danger" style={{ width: '120px' }}>LOGOUT</Button>
+                            <Button outline color="danger" style={{ width: '120px' }} onClick={this.btnLogout} >LOGOUT</Button>
                         </div>
                         <div className="row">
                             <div className="col-4" style={{ marginTop: 5 }}>
@@ -155,4 +167,4 @@ const mapToProps = (state) => {
         session: state.sessionReducer.session
     }
 }
-export default connect(mapToProps, { getSessionAction, deleteSession })(ManageSession);
+export default connect(mapToProps, { getSessionAction, deleteSession, logoutAction })(ManageSession);
