@@ -1,18 +1,48 @@
-import logo from './logo.svg';
+import React from 'react';
+import { connect } from 'react-redux';
 import './App.css';
+import LoginPage from './pages/LoginPage';
+// import Dashboard from './pages/Dashboard';
+import { keepLogin } from './redux/actions'
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ManageSession from './pages/ManageSession';
 import { Route, Routes } from 'react-router';
-import SidebarComp from './components/Sidebar';
-function App() {
-  return (
-    <div className="d-flex">
-      <SidebarComp/>
-      <Routes>
-        <Route path="/session" element={<ManageSession/>}/>
-      </Routes>
-    </div>
-  );
+import Sidebar from './components/Sidebar';
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {}
+  }
+
+  componentDidMount() {
+    this.props.keepLogin();
+  }
+
+  render() {
+    return (
+      <div className={this.props.data.fullname && "d-flex"}>
+        {
+          this.props.data.fullname &&
+          <Sidebar />
+        }
+        <div>
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/session" element={<ManageSession />} />
+            {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+          </Routes>
+        </div>
+      </div>
+    );
+  }
 }
 
-export default App;
+const maptoprops = (state) => {
+  return {
+    data: state.userReducer,
+  }
+}
+
+export default connect(maptoprops, { keepLogin })(App);
