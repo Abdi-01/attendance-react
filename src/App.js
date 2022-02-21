@@ -13,6 +13,7 @@ import 'react-calendar/dist/Calendar.css'
 import ManageSession from './pages/ManageSession';
 import { Route, Routes } from 'react-router';
 import Sidebar from './components/Sidebar';
+import ErrorPage from './pages/ErrorPage';
 
 class App extends React.Component {
   constructor(props) {
@@ -34,9 +35,17 @@ class App extends React.Component {
         <div>
           <Routes>
             <Route path="/" element={<LoginPage />} />
-            <Route path="/session" element={<ManageSession />} />
-            <Route path='/register' element={<RegisterPage />} />
-            <Route path='/dashboard' element={<DashboardAttend />} />
+            {
+              this.props.data.fullname ?
+              <>
+              <Route path="/session" element={<ManageSession />} />
+              <Route path='/register' element={<RegisterPage />} />
+              <Route path='/dashboard' element={<DashboardAttend />} />
+              </>
+              :
+              <Route path='*' element={<ErrorPage />} />
+            }
+            <Route path='*' element={<ErrorPage />} />
             {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           </Routes>
         </div>
