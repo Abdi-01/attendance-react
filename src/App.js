@@ -1,25 +1,32 @@
-import logo from './logo.svg';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Routes,Route } from 'react-router-dom';
 import './App.css';
+import './app.scss'
+import LoginPage from './pages/LoginPage';
+import Dashboard from './pages/Dashboard';
+import {keepLogin} from './redux/actions'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {  }
+  }
+
+  componentDidMount(){
+    this.props.keepLogin();
+  }
+
+  render() { 
+    return (
+      <div>
+        <Routes>
+          <Route path="/" element={<LoginPage/>}/>
+          <Route path="/test" element={<Dashboard/>} />
+        </Routes>
+      </div>
+    );
+  }
 }
 
-export default App;
+export default connect(null,{keepLogin}) (App);
