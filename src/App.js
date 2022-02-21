@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './App.css';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/Register';
 // import Dashboard from './pages/Dashboard';
 import { keepLogin } from './redux/actions'
 import { getStudentSessionAction } from './redux/actions';
@@ -34,6 +35,7 @@ class App extends React.Component {
           <Routes>
             <Route path="/" element={<LoginPage />} />
             <Route path="/session" element={<ManageSession />} />
+            <Route path='/register' element={<RegisterPage />} />
             <Route path='/dashboard' element={<DashboardAttend />} />
             {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           </Routes>
