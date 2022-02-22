@@ -45,6 +45,11 @@ class Sidebar extends React.Component {
                                         Registration Student
                                     </Link>
                                 </MenuItem>
+                           <MenuItem >
+                                         <Link to='/student-management'>
+                                          Student Attendance
+                                              </Link>
+                                            </MenuItem>
                             </>
                         }
                     </Menu>
@@ -53,6 +58,7 @@ class Sidebar extends React.Component {
         );
     }
 }
+
 
 const maptoprops = (state) => {
     return {

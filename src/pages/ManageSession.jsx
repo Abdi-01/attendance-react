@@ -114,12 +114,12 @@ class ManageSession extends React.Component {
         this.props.deleteSession(temp[index].idsession)
     }
     btnLogout =()=>{
-        localStorage.removeItem('data');
-        this.props.logoutAction();
         this.setState({redirect:true});
-        
+        localStorage.removeItem('data');
+        this.props.logoutAction();  
     }
     render() {
+        console.log(this.state.redirect)
         if(this.state.redirect){
             return <Navigate to="/"/>
         }
