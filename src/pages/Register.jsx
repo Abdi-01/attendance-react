@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { Button, FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap';
 import { API_URL } from '../helper';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
+import { Navigate } from 'react-router-dom';
+import { logoutAction } from '../redux/actions'
 
 class RegisterPage extends React.Component {
     constructor(props) {
@@ -13,7 +15,8 @@ class RegisterPage extends React.Component {
             images: null,
             radioCheckedMale: false,
             radioCheckedFemale: false,
-            typePass: true
+            typePass: true,
+            redirect: false
         }
     }
 
@@ -89,13 +92,22 @@ class RegisterPage extends React.Component {
         this.imagesRegis.value = ""
     }
 
+    btnLogout = () => {
+        this.setState({ redirect: true });
+        localStorage.removeItem('data');
+        this.props.logoutAction();
+    }
+
     render() {
+        if (this.state.redirect) {
+            return <Navigate to="/" />
+        }
         return (
             <div className='container' style={{ width: "90vw" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
-                    <h1>Register Student</h1>
-                    <Button outline color='danger' style={{ width: "100px", height: "40px" }}>Logout</Button>
-                </div>
+                    <h1>Regis Student</h1>
+                    <Button outline color='danger' style={{ width: "100px", height: "40px" }} onClick={this.btnLogout} >Logout</Button>
+                </div >
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
                     <div>
                         <div>
@@ -177,7 +189,7 @@ class RegisterPage extends React.Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         );
     }
 }
@@ -188,4 +200,4 @@ const mapToProps = (state) => {
     }
 }
 
-export default connect(mapToProps)(RegisterPage);
+export default connect(mapToProps, { logoutAction })(RegisterPage);
