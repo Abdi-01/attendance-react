@@ -1,10 +1,11 @@
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Navigate } from 'react-router-dom';
-import { Button, FormGroup, Input, Label } from 'reactstrap';
+import { Button, FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap';
 import { API_URL } from '../helper';
-import {logoutAction} from '../redux/actions'
+import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
+import { Navigate } from 'react-router-dom';
+import { logoutAction } from '../redux/actions'
 
 class RegisterPage extends React.Component {
     constructor(props) {
@@ -14,18 +15,17 @@ class RegisterPage extends React.Component {
             images: null,
             radioCheckedMale: false,
             radioCheckedFemale: false,
-            redirect : false
+            typePass: true,
+            redirect: false
         }
     }
 
     handleImages = (e) => {
         this.setState({ images: { name: e.target.files[0].name, file: e.target.files[0] } })
     }
-    // handleImages = (e) => {
-    //     this.setState({ images: { file: URL.createObjectURL(e.target.files[0]) } })
-    // }
 
     btRegis = () => {
+        let token = localStorage.getItem("data");
         let formData = new FormData();
         let data = {
             nis: this.nisRegis.value,
@@ -53,9 +53,11 @@ class RegisterPage extends React.Component {
             formData.append('data', JSON.stringify(data));
             formData.append('images', this.state.images.file)
             // this.state.images.map(val => formData.append('images', val.file))
-            axios.post(`${API_URL}/users/regis`, formData,
-
-            ).then(res => {
+            axios.post(`${API_URL}/users/regis`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(res => {
                 if (res.data.success) {
                     alert("success add users")
                     this.nisRegis.value = ""
@@ -90,59 +92,60 @@ class RegisterPage extends React.Component {
         this.imagesRegis.value = ""
     }
 
-    btnLogout =()=>{
-        this.setState({redirect:true});
+    btnLogout = () => {
+        this.setState({ redirect: true });
         localStorage.removeItem('data');
         this.props.logoutAction();
     }
 
     render() {
-        if(this.state.redirect){
+        if (this.state.redirect) {
             return <Navigate to="/" />
         }
         return (
-            <div className='container'>
+            <div className='container' style={{ width: "90vw" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
                     <h1>Regis Student</h1>
                     <Button outline color='danger' style={{ width: "100px", height: "40px" }} onClick={this.btnLogout} >Logout</Button>
-                </div>
+                </div >
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
                     <div>
                         <div>
                             <Label>NIS</Label>
-                            <Input style={{ width: "600px" }}
-                                innerRef={(element) => this.nisRegis = element} />
+                            <Input style={{ width: "600px" }} innerRef={(element) => this.nisRegis = element} />
                         </div>
                         <div style={{ marginTop: "20px" }}>
                             <Label>Full Name</Label>
-                            <Input
-                                innerRef={(element) => this.fullNameRegis = element} />
+                            <Input innerRef={(element) => this.fullNameRegis = element} />
                         </div>
                         <div style={{ marginTop: "20px" }}>
                             <Label>Email</Label>
-                            <Input
-                                innerRef={(element) => this.emailRegis = element} />
+                            <Input innerRef={(element) => this.emailRegis = element} />
                         </div>
                         <div style={{ marginTop: "20px" }}>
                             <Label>Password</Label>
-                            <Input type="password"
-                                innerRef={(element) => this.passwordRegis = element} />
+                            <InputGroup>
+                                <Input type={this.state.typePass ? "password" : "text"} innerRef={(element) => this.passwordRegis = element} />
+                                <InputGroupText onClick={() => this.setState({ typePass: !this.state.typePass })}>
+                                    {
+                                        this.state.typePass ? <AiFillEyeInvisible /> : <AiFillEye />
+                                    }
+                                </InputGroupText>
+                            </InputGroup>
                         </div>
                         <div style={{ marginTop: "20px" }}>
                             <Label>Phone</Label>
-                            <Input
-                                innerRef={(element) => this.phoneRegis = element} />
+                            <Input innerRef={(element) => this.phoneRegis = element} />
                         </div>
                         <div style={{ marginTop: "20px" }}>
                             <Label>Address</Label>
-                            <Input
-                                innerRef={(element) => this.addressRegis = element} />
+                            <Input type='textarea' innerRef={(element) => this.addressRegis = element} />
+
                         </div>
                         <div style={{ display: "flex", marginTop: "20px" }}>
                             <div>
                                 <Label>Age</Label>
-                                <Input style={{ width: "300px" }}
-                                    innerRef={(element) => this.ageRegis = element} />
+                                <Input style={{ width: "300px" }} innerRef={(element) => this.ageRegis = element} />
                             </div>
                             <div onChange={this.onChangeValue}>
                                 <Label style={{ marginLeft: "20px" }}>Gender</Label>
@@ -162,9 +165,13 @@ class RegisterPage extends React.Component {
                             <Label>Session</Label>
                             <Input type='select' innerRef={(element) => this.sessionRegis = element} >
                                 <option value=""></option>
-                                <option value="1">SESSION 1</option>
-                                <option value="2">SESSION 2</option>
+                                {
+                                    this.props.session.map((value, index) => <option value={value.idsession} key={value.idsession}>{value.session}</option>)
+                                }
                             </Input>
+                        </div>
+                        <div style={{ marginTop: "20px" }}>
+                            <Button onClick={this.btClear}>Clear Form</Button>
                         </div>
                     </div>
                     <div>
@@ -182,9 +189,15 @@ class RegisterPage extends React.Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         );
     }
 }
 
-export default connect(null,{logoutAction}) (RegisterPage);
+const mapToProps = (state) => {
+    return {
+        session: state.sessionReducer.session
+    }
+}
+
+export default connect(mapToProps, { logoutAction })(RegisterPage);
