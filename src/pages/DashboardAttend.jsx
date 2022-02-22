@@ -62,9 +62,9 @@ const DashboardAttend = () => {
     }
 
     const btnLogout =()=>{
+        setRedirect(true);
         localStorage.removeItem('data');
         dispatch(logoutAction());
-        setRedirect(true);
         
     }
 

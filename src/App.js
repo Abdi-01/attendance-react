@@ -35,10 +35,8 @@ class App extends React.Component {
         <div>
           <Routes>
             <Route path="/" element={<LoginPage />} />
+            <Route path='/dashboard' element={<DashboardAttend />} />
             {
-              this.props.data.role == "student" ?
-              <Route path='/dashboard' element={<DashboardAttend />} />
-              :
               this.props.data.role == "admin" ? 
               <>
               <Route path="/session" element={<ManageSession />} />
