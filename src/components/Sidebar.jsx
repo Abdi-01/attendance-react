@@ -15,22 +15,41 @@ class Sidebar extends React.Component {
             <ProSidebar className='bg-light' style={{ height: '100vh' }}>
                 <SidebarHeader className='text-center' style={{ margin: "10%" }}>
                     <div>
-                        <img src="https://png.pngtree.com/png-clipart/20200701/original/pngtree-character-default-avatar-png-image_5407167.jpg" style={{ width: '50%', borderRadius: "50%" }} />
+                        <img src={this.props.data.photo} style={{ width: '50%', borderRadius: "50%" }} />
                     </div>
                     <div>
-                        <h3>name</h3>
-                        <p className='lead'>nis</p>
+                        <h3>{this.props.data.fullname}</h3>
+                        <p className='lead'>{this.props.data.nis}</p>
                     </div>
                 </SidebarHeader>
                 <SidebarContent>
                     <Menu>
-                        <MenuItem >Dashboard</MenuItem>
+                        <MenuItem ><Link to='/dashboard'>
+                            Dashboard
+                        </Link></MenuItem>
                         <MenuItem >Attendance List</MenuItem>
                         <MenuItem >My Profile</MenuItem>
-                        <Link to='/student-management'>
-                            <MenuItem >Student Attendance</MenuItem>
-                        </Link>
-                        <MenuItem >Registration Student</MenuItem>
+                        {
+                            this.props.data.role == "admin" &&
+                            <>
+                                <MenuItem >Student Attendance</MenuItem>
+                                <MenuItem >
+                                    <Link to='/session'>
+                                        Sessions
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem >
+                                    <Link to='/register'>
+                                        Registration Student
+                                    </Link>
+                                </MenuItem>
+                           <MenuItem >
+                                         <Link to='/student-management'>
+                                          Student Attendance
+                                              </Link>
+                                            </MenuItem>
+                            </>
+                        }
                     </Menu>
                 </SidebarContent>
             </ProSidebar>
@@ -39,5 +58,10 @@ class Sidebar extends React.Component {
 }
 
 
+const maptoprops = (state) => {
+    return {
+        data: state.userReducer,
+    }
+}
 
-export default Sidebar;
+export default connect(maptoprops)(Sidebar);
