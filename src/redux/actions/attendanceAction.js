@@ -11,7 +11,7 @@ export const getStudentSessionAction = () => {
 
             if (token) {
 
-                let res = await axios.get(`${API_URL}/attendance`, {
+                let res = await axios.get(`${API_URL}/attendance/session`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -21,7 +21,7 @@ export const getStudentSessionAction = () => {
 
                     dispatch({
                         type: 'GET_SESSION_STUDENT_SUCCESS',
-                        payload: res.data.dataSessionStudent
+                        payload: res.data.dataSessionStudent[0]
                     })
 
                     return { success: res.data.success }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from 'reactstrap'
 import Clock from 'react-live-clock';
 import Calendar from 'react-calendar';
@@ -9,45 +9,96 @@ import iconAvaVespa from '../assets/avatar_vespa.png'
 import axios from 'axios';
 import { API_URL } from '../helper';
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
-const DashboardAttend = () => {
+const DashboardAttend = (props) => {
 
 
     let date = new Date()
     let est = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
     const [tanggal, setTanggal] = useState(est);
     const [calendar, setCalendar] = useState(new Date());
-    const [idattendance,setIdAttendance] = useState(null);
+    const [attendanceStudent, setAttendanceStudent] = useState([]);
+    const [btnCheckOut,setBtnCheckOut] = useState(true);
 
     //ambil data session student dari reducer
-    // const {dataSession} = useSelector((state) => {
-    //     return {
-    //         dataSession : state.attendanceReducer.dataSessionStudent
-    //     } 
-    // })
+    const { dataSession } = useSelector((state) => {
+        return {
+            dataSession: state.attendanceReducer.dataSessionStudent
+        }
+    })
+
+    useEffect(() => {
+        getDataAttendance()
+    },[])
+
+    const getDataAttendance = async() => {
+
+        try {
+
+            let token = localStorage.getItem('data');
+
+            if(token) {
+
+                let res = await axios.get(`${API_URL}/attendance/${tanggal}`,{
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+
+                if(res.data.dataAttendance.length > 0){
+                    setAttendanceStudent(res.data.dataAttendance[0])
+                    
+                    if(res.data.dataAttendance[0].check_in) {
+                        
+                        setBtnCheckOut(false)
+                        
+                        if(res.data.dataAttendance[0].check_out){
+                            
+                            setBtnCheckOut(true)
+                            
+                        } else {
+                            
+                            setBtnCheckOut(false)
+                        }
+                    }
+                } 
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const onBtCheckIn = async () => {
 
         let time = new Date()
-        let checkin = time.getHours()+':'+time.getMinutes()+':'+time.getSeconds();
-        
+        let checkin = time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
+
         let data = {
             date: tanggal,
             checkin: checkin
         }
         try {
             let token = localStorage.getItem('data');
-            if(token) {
+            if (token) {
 
-                let res = await axios.post(`${API_URL}/attendance/checkin`,data,{
+                let res = await axios.post(`${API_URL}/attendance/checkin`, data, {
                     headers: {
-                        'Athorization' : `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`
                     }
                 })
 
-                if(res.data.succes) {
-                    //set idattendance ke state idattendance untuk keperluan checkout
-                    setIdAttendance(res.data.data_IdAttendance)
+                if (res.data.success) {
+
+                    getDataAttendance()
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Success Checkin'
+                    })
+                    
                 }
             }
         } catch (error) {
@@ -58,10 +109,34 @@ const DashboardAttend = () => {
     const onBtCheckOut = async () => {
 
         let time = new Date()
-        let checkout = time.getHours()+':'+time.getMinutes()+':'+time.getSeconds()
-        
+        let checkout = time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
+        console.log('isi checkout =>', checkout)
+        // let data = {
+        //     checkout: checkout
+        // }
         try {
-            let res = await axios.patch(`${API_URL}/attendance/checkout/${idattendance}`, checkout)
+            let token = localStorage.getItem('data');
+
+            if(token) {
+                let res = await axios.patch(`${API_URL}/attendance/checkout/${attendanceStudent.idattendance}`, {checkout}, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+
+                if (res.data.success) {
+
+                    getDataAttendance()
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Success Checkout'
+                    })
+
+                }
+            }
+
         } catch (error) {
             console.log(error)
         }
@@ -69,6 +144,7 @@ const DashboardAttend = () => {
 
     return (
         <div className='row g-0 mt-5'>
+            {console.log('isi attendanceStudent.checkin ',  attendanceStudent.check_in )}
             <div className="col-7">
                 <div>
                     <h3>Dashboard</h3>
@@ -92,10 +168,10 @@ const DashboardAttend = () => {
                         </div>
                         <div className='d-flex justify-content-evenly'>
                             <div>
-                                <Button color='info' onClick={onBtCheckIn}>Checkin</Button>
+                                <Button color='info' onClick={onBtCheckIn} disabled={attendanceStudent.check_in ? true : false}>Checkin</Button>
                             </div>
                             <div>
-                                <Button color='danger' onClick={onBtCheckOut}>Checkout</Button>
+                                <Button color='danger' onClick={onBtCheckOut} disabled={btnCheckOut}>Checkout</Button>
                             </div>
                         </div>
                     </div>
@@ -105,21 +181,21 @@ const DashboardAttend = () => {
                                 <img src={iconCheckIn} alt="" />
                                 <div className='mt-3'>
                                     <p style={{ margin: 0 }}>Check In</p>
-                                    <p style={{ margin: 0 }}>09:00</p>
+                                    <p style={{ margin: 0 }}>{dataSession.timein}</p>
                                 </div>
                             </div>
                             <div className="d-flex">
                                 <img src={iconSession} alt="" />
                                 <div className='mt-3'>
                                     <p style={{ margin: 0 }}>Session</p>
-                                    <p style={{ margin: 0 }}>1</p>
+                                    <p style={{ margin: 0 }}>{dataSession.session}</p>
                                 </div>
                             </div>
                             <div className="d-flex">
                                 <img src={iconCheckOut} alt="" />
                                 <div className='mt-3'>
                                     <p style={{ margin: 0 }}>Checkout</p>
-                                    <p style={{ margin: 0 }}>18:00</p>
+                                    <p style={{ margin: 0 }}>{dataSession.timeout}</p>
                                 </div>
                             </div>
                         </div>
@@ -127,23 +203,29 @@ const DashboardAttend = () => {
                 </div>
             </div>
             <div className="col-5">
-                <div className='d-flex justify-content-end mx-5'>
+                <div className='d-flex justify-content-end'>
                     <Button color='danger' outline>Logout</Button>
                 </div>
-                <div className="mt-4" style={{ width: '30vw', height: '25vh', backgroundColor: '#69A0B1', borderRadius: '10px' }}>
+                <div className="mt-4 mx-3" style={{ width: '30vw', height: '25vh', backgroundColor: '#69A0B1', borderRadius: '10px' }}>
                     <div className='d-flex p-3'>
                         <div>
                             <img src={iconAvaVespa} alt="" />
                         </div>
-                        <div className='pt-4' >
-                            <h6 style={{ color: 'white', fontWeight: 'bold' }}>Welcome to the class bob</h6>
-                            <p style={{ color: "white", fontSize: '13px' }}>don't forget to attendance</p>
-                        </div>
+                        {
+                            dataSession.fullname
+                                ?
+                                <div className='pt-4' >
+                                    <h6 style={{ color: 'white', fontWeight: 'bold' }}>Welcome to the class {dataSession.fullname.split(' ')[0]} </h6>
+                                    <p style={{ color: "white", fontSize: '13px' }}>don't forget to attendance</p>
+                                </div>
+                                :
+                                null
+                        }
                     </div>
                 </div>
-                <div className='my-5'>
+                <div className='my-5 mx-3'>
                     <div>
-                        <Calendar onChange={setCalendar} value={calendar}  />
+                        <Calendar onChange={setCalendar} value={calendar} />
                     </div>
                 </div>
             </div>
