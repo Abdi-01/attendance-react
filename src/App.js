@@ -14,6 +14,7 @@ import ManageSession from './pages/ManageSession';
 import { Route, Routes } from 'react-router';
 import Sidebar from './components/Sidebar';
 import ErrorPage from './pages/ErrorPage';
+import AttendancePage from './pages/AttendancePage'
 
 class App extends React.Component {
   constructor(props) {
@@ -45,6 +46,14 @@ class App extends React.Component {
               </>
               :
               <Route path='*' element={<ErrorPage />} />
+          }
+          {
+            this.props.data.role == "student" ?
+            <>
+              <Route path="/attendance" element={<AttendancePage />} />
+            </>
+            :
+            <Route path='*' element={<ErrorPage />} />
           }
           <Route path='*' element={<ErrorPage />} />
           {/* <Route path="/dashboard" element={<Dashboard />} /> */}

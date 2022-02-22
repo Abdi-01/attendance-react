@@ -27,7 +27,11 @@ class Sidebar extends React.Component {
                         <MenuItem ><Link to='/dashboard'>
                             Dashboard
                         </Link></MenuItem>
-                        <MenuItem >Attendance List</MenuItem>
+                        <MenuItem >
+                        <Link to='/attendance'>
+                        Attendance List
+                        </Link>
+                        </MenuItem>
                         <MenuItem >My Profile</MenuItem>
                         {
                             this.props.data.role == "admin" &&
