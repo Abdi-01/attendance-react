@@ -11,7 +11,7 @@ import { API_URL } from '../helper';
 import { useSelector } from 'react-redux';
 import { sidebarAction } from '../redux/actions';
 import { useDispatch } from 'react-redux';
-import {logoutAction} from '../redux/actions';
+import { logoutAction } from '../redux/actions';
 import { Navigate } from 'react-router-dom';
 
 const DashboardAttend = () => {
@@ -31,8 +31,8 @@ const DashboardAttend = () => {
     //     } 
     // })
     useEffect(() => {
-     dispatch(sidebarAction('/dashboard'))
-    },[])
+        dispatch(sidebarAction('/dashboard'))
+    }, [])
     const onBtCheckIn = async () => {
 
         let time = new Date()
@@ -62,11 +62,11 @@ const DashboardAttend = () => {
         }
     }
 
-    const btnLogout =()=>{
+    const btnLogout = () => {
         setRedirect(true);
         localStorage.removeItem('data');
         dispatch(logoutAction());
-        
+
     }
 
     const onBtCheckOut = async () => {
@@ -81,9 +81,9 @@ const DashboardAttend = () => {
         }
     }
 
-    if(redirect){
-        return <Navigate to='/'/>
-    }else {
+    if (redirect) {
+        return <Navigate to='/' />
+    } else {
         return (
             <div className='row g-0 mt-5'>
                 <div className="col-7">
@@ -158,10 +158,10 @@ const DashboardAttend = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className='my-5'>
-                    <div>
-                        <Calendar onChange={setCalendar} value={calendar} />
+                    <div className='my-5'>
+                        <div>
+                            <Calendar onChange={setCalendar} value={calendar} />
+                        </div>
                     </div>
                 </div>
             </div>
