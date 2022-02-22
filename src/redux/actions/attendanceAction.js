@@ -16,7 +16,7 @@ export const getStudentSessionAction = () => {
                         'Authorization': `Bearer ${token}`
                     }
                 })
-
+                console.log(' res.data.dataSessionStudent =>' ,res.data.dataSessionStudent)
                 if (res.data.success) {
 
                     dispatch({

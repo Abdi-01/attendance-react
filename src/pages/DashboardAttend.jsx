@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { Button } from 'reactstrap'
 import Clock from 'react-live-clock';
@@ -8,18 +9,20 @@ import iconCheckOut from '../assets/Component 3.png'
 import iconAvaVespa from '../assets/avatar_vespa.png'
 import axios from 'axios';
 import { API_URL } from '../helper';
-import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
+import { useSelector, useDispatch } from 'react-redux';
+import {logoutAction} from '../redux/actions';
+import { Navigate } from 'react-router-dom';
 
 const DashboardAttend = (props) => {
 
 
     let date = new Date()
-    let est = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-    const [tanggal, setTanggal] = useState(est);
+    let tanggal = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
     const [calendar, setCalendar] = useState(new Date());
     const [attendanceStudent, setAttendanceStudent] = useState([]);
     const [btnCheckOut,setBtnCheckOut] = useState(true);
+    const [redirect, setRedirect] = useState(false)
 
     //ambil data session student dari reducer
     const { dataSession } = useSelector((state) => {
@@ -70,6 +73,8 @@ const DashboardAttend = (props) => {
         }
     }
 
+    let dispatch = useDispatch();
+
     const onBtCheckIn = async () => {
 
         let time = new Date()
@@ -104,6 +109,13 @@ const DashboardAttend = (props) => {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    const btnLogout =()=>{
+        setRedirect(true);
+        localStorage.removeItem('data');
+        dispatch(logoutAction());
+        
     }
 
     const onBtCheckOut = async () => {
@@ -142,95 +154,101 @@ const DashboardAttend = (props) => {
         }
     }
 
-    return (
-        <div className='row g-0 mt-5'>
-            {console.log('isi attendanceStudent.checkin ',  attendanceStudent.check_in )}
-            <div className="col-7">
-                <div>
-                    <h3>Dashboard</h3>
-                    <div className='mx-4 mt-4'>
-                        <h4>Attendance</h4>
-                    </div>
-                    <div className='mt-3' style={{ width: '40vw', height: '40vh', backgroundColor: '#F8F6F8', borderRadius: '10px' }}>
-                        <div className='p-4 text-center '>
-                            <div className='mt-3'>
-                                <h2>
-                                    <Clock date={`${tanggal}`} format={'dddd, DD MMMM YYYY'} />
-                                </h2>
-                            </div>
-                            <div>
-                                <h1 style={{ fontWeight: 'bolder', color: '#7C7B7D', fontSize: '5vw' }}>
-                                    <Clock
-                                        format="HH:mm:ss" interval={1000} ticking={true}
-                                    />
-                                </h1>
-                            </div>
-                        </div>
-                        <div className='d-flex justify-content-evenly'>
-                            <div>
-                                <Button color='info' onClick={onBtCheckIn} disabled={attendanceStudent.check_in ? true : false}>Checkin</Button>
-                            </div>
-                            <div>
-                                <Button color='danger' onClick={onBtCheckOut} disabled={btnCheckOut}>Checkout</Button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='my-5'>
-                        <div className='d-flex justify-content-'>
-                            <div className="d-flex">
-                                <img src={iconCheckIn} alt="" />
-                                <div className='mt-3'>
-                                    <p style={{ margin: 0 }}>Check In</p>
-                                    <p style={{ margin: 0 }}>{dataSession.timein}</p>
-                                </div>
-                            </div>
-                            <div className="d-flex">
-                                <img src={iconSession} alt="" />
-                                <div className='mt-3'>
-                                    <p style={{ margin: 0 }}>Session</p>
-                                    <p style={{ margin: 0 }}>{dataSession.session}</p>
-                                </div>
-                            </div>
-                            <div className="d-flex">
-                                <img src={iconCheckOut} alt="" />
-                                <div className='mt-3'>
-                                    <p style={{ margin: 0 }}>Checkout</p>
-                                    <p style={{ margin: 0 }}>{dataSession.timeout}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="col-5">
-                <div className='d-flex justify-content-end'>
-                    <Button color='danger' outline>Logout</Button>
-                </div>
-                <div className="mt-4 mx-3" style={{ width: '30vw', height: '25vh', backgroundColor: '#69A0B1', borderRadius: '10px' }}>
-                    <div className='d-flex p-3'>
-                        <div>
-                            <img src={iconAvaVespa} alt="" />
-                        </div>
-                        {
-                            dataSession.fullname
-                                ?
-                                <div className='pt-4' >
-                                    <h6 style={{ color: 'white', fontWeight: 'bold' }}>Welcome to the class {dataSession.fullname.split(' ')[0]} </h6>
-                                    <p style={{ color: "white", fontSize: '13px' }}>don't forget to attendance</p>
-                                </div>
-                                :
-                                null
-                        }
-                    </div>
-                </div>
-                <div className='my-5 mx-3'>
+    if(redirect){
+        return <Navigate to='/'/>
+    }else {
+        return (
+            <div className='row g-0 mt-5'>
+                {console.log('isi datasession', dataSession)}
+                <div className="col-7">
                     <div>
-                        <Calendar onChange={setCalendar} value={calendar} />
+                        <h3>Dashboard</h3>
+                        <div className='mx-4 mt-4'>
+                            <h4>Attendance</h4>
+                        </div>
+                        <div className='mt-3' style={{ width: '40vw', height: '40vh', backgroundColor: '#F8F6F8', borderRadius: '10px' }}>
+                            <div className='p-4 text-center '>
+                                <div className='mt-3'>
+                                    <h2>
+                                        <Clock date={`${tanggal}`} format={'dddd, DD MMMM YYYY'} />
+                                    </h2>
+                                </div>
+                                <div>
+                                    <h1 style={{ fontWeight: 'bolder', color: '#7C7B7D', fontSize: '5vw' }}>
+                                        <Clock
+                                            format="HH:mm:ss" interval={1000} ticking={true}
+                                        />
+                                    </h1>
+                                </div>
+                            </div>
+                            <div className='d-flex justify-content-evenly'>
+                                <div>
+                                    <Button color='info' onClick={onBtCheckIn}  disabled={attendanceStudent.check_in ? true : false}>Checkin</Button>
+                                </div>
+                                <div>
+                                    <Button color='danger' onClick={onBtCheckOut} disabled={btnCheckOut}>Checkout</Button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='my-5'>
+                            <div className='d-flex justify-content-'>
+                                <div className="d-flex">
+                                    <img src={iconCheckIn} alt="" />
+                                    <div className='mt-3'>
+                                        <p style={{ margin: 0 }}>Check In</p>
+                                        <p style={{ margin: 0 }}>{dataSession.timein}</p>
+                                    </div>
+                                </div>
+                                <div className="d-flex">
+                                    <img src={iconSession} alt="" />
+                                    <div className='mt-3'>
+                                        <p style={{ margin: 0 }}>Session</p>
+                                        <p style={{ margin: 0 }}>{dataSession.session}</p>
+                                    </div>
+                                </div>
+                                <div className="d-flex">
+                                    <img src={iconCheckOut} alt="" />
+                                    <div className='mt-3'>
+                                        <p style={{ margin: 0 }}>Checkout</p>
+                                        <p style={{ margin: 0 }}>{dataSession.timeout}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-5">
+                    <div className='d-flex justify-content-end'>
+                        <Button color='danger' outline onClick={btnLogout}>Logout</Button>
+                    </div>
+                    <div className="mt-4 mx-3" style={{ width: '30vw', height: '25vh', backgroundColor: '#69A0B1', borderRadius: '10px' }}>
+                        <div className='d-flex p-3'>
+                            <div>
+                                <img src={iconAvaVespa} alt="" />
+                            </div>
+                            {
+                                dataSession.fullname
+                                    ?
+                                    <div className='pt-4' >
+                                        <h6 style={{ color: 'white', fontWeight: 'bold' }}>Welcome to the class {dataSession.fullname.split(' ')[0]} </h6>
+                                        <p style={{ color: "white", fontSize: '13px' }}>don't forget to attendance</p>
+                                    </div>
+                                    :
+                                    null
+                            }
+                        </div>
+                    </div>
+                    <div className='my-5 mx-3'>
+                        <div>
+                            <Calendar onChange={setCalendar} value={calendar} />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+
+    }
+
 }
 
-export default DashboardAttend
+export default DashboardAttend;
