@@ -5,6 +5,7 @@ import { API_URL } from '../helper';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import ModalAttendance from '../components/ModalAttendance';
+import { sidebarAction } from '../redux/actions';
 import { Navigate } from 'react-router-dom';
 import {logoutAction} from '../redux/actions'
 import { connect } from 'react-redux';
@@ -23,6 +24,7 @@ class StudentManagement extends Component {
 
     componentDidMount() {
         this.getAttendance()
+        this.props.sidebarAction('/student-management')
     }
 
     getAttendance = () => {
@@ -198,7 +200,7 @@ class StudentManagement extends Component {
                     </div>
                 </div>
                 <div>
-                    <Table style={{width: '84vw'}}>
+                    <Table style={{ width: '84vw' }}>
                         <thead className='text-muted px-2'>
                             <tr>
                                 <th>
@@ -261,5 +263,11 @@ class StudentManagement extends Component {
         );
     }
 }
+const mapToProps = (state) => {
+    return {
+        session: state.sessionReducer.session
+    }
+}
 
-export default connect(null,{logoutAction}) (StudentManagement);
+
+export default connect(mapToProps,{logoutAction, sidebarAction}) (StudentManagement);

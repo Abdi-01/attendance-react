@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
+import { sidebarAction } from '../redux/actions';
 import { Button, FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap';
 import { API_URL } from '../helper';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
@@ -19,7 +20,9 @@ class RegisterPage extends React.Component {
             redirect: false
         }
     }
-
+    componentDidMount() {
+        this.props.sidebarAction('/register')
+    }
     handleImages = (e) => {
         this.setState({ images: { name: e.target.files[0].name, file: e.target.files[0] } })
     }
@@ -200,4 +203,4 @@ const mapToProps = (state) => {
     }
 }
 
-export default connect(mapToProps, { logoutAction })(RegisterPage);
+export default connect(mapToProps, { logoutAction, sidebarAction })(RegisterPage);
