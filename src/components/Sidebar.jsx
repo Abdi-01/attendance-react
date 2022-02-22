@@ -3,6 +3,7 @@ import React from 'react';
 import { ProSidebar, Menu, MenuItem, SubMenu, SidebarHeader, SidebarContent } from 'react-pro-sidebar';
 import { connect } from 'react-redux';
 import 'react-pro-sidebar/dist/css/styles.css';
+import { Link } from 'react-router-dom';
 
 class Sidebar extends React.Component {
     constructor(props) {
@@ -11,23 +12,44 @@ class Sidebar extends React.Component {
     }
     render() {
         return (
-            <ProSidebar  className='bg-light' style={{ height: '100vh' }}>
-                <SidebarHeader className='text-center' style={{margin:"10%"}}>
+            <ProSidebar className='bg-light' style={{ height: '100vh' }}>
+                <SidebarHeader className='text-center' style={{ margin: "10%" }}>
                     <div>
-                        <img style={{width:'50%', borderRadius:"50%"}}/>
+                        <img src={this.props.data.photo} style={{ width: '50%', borderRadius: "50%" }} />
                     </div>
                     <div>
-                        <h3></h3>
-                        <p className='lead'></p>
+                        <h3>{this.props.data.fullname}</h3>
+                        <p className='lead'>{this.props.data.nis}</p>
                     </div>
                 </SidebarHeader>
                 <SidebarContent>
                     <Menu>
-                        <MenuItem >Dashboard</MenuItem>
+                        <MenuItem ><Link to='/dashboard'>
+                            Dashboard
+                        </Link></MenuItem>
                         <MenuItem >Attendance List</MenuItem>
                         <MenuItem >My Profile</MenuItem>
-                        <MenuItem >Student Attendance</MenuItem>
-                        <MenuItem >Registration Student</MenuItem>
+                        {
+                            this.props.data.role == "admin" &&
+                            <>
+                                <MenuItem >Student Attendance</MenuItem>
+                                <MenuItem >
+                                    <Link to='/session'>
+                                        Sessions
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem >
+                                    <Link to='/register'>
+                                        Registration Student
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem >
+                                    <Link to='/student-management'>
+                                        Student Attendance
+                                    </Link>
+                                </MenuItem>
+                            </>
+                        }
                     </Menu>
                 </SidebarContent>
             </ProSidebar>
@@ -36,4 +58,10 @@ class Sidebar extends React.Component {
 }
 
 
-export default Sidebar;
+const maptoprops = (state) => {
+    return {
+        data: state.userReducer,
+    }
+}
+
+export default connect(maptoprops)(Sidebar);
