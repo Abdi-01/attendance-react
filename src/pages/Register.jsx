@@ -91,9 +91,9 @@ class RegisterPage extends React.Component {
     }
 
     btnLogout =()=>{
+        this.setState({redirect:true});
         localStorage.removeItem('data');
         this.props.logoutAction();
-        this.setState({redirect:true});
     }
 
     render() {

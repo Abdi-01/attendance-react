@@ -34,15 +34,16 @@ class App extends React.Component {
         }
           <Routes>
             <Route path="/" element={<LoginPage />} />
+            <Route path='/dashboard' element={<DashboardAttend />} />
             {
-              this.props.data.fullname ?
+              this.props.data.role == "admin" ? 
               <>
               <Route path="/session" element={<ManageSession />} />
               <Route path='/register' element={<RegisterPage />} />
               <Route path='/dashboard' element={<DashboardAttend />} />
                 <Route path='/student-management' element={<StudentManagement />} />
               </>
-              :
+              : 
               <Route path='*' element={<ErrorPage />} />
             }
             <Route path='*' element={<ErrorPage />} />
