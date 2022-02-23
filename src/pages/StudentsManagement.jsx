@@ -5,6 +5,10 @@ import { API_URL } from '../helper';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import ModalAttendance from '../components/ModalAttendance';
+import { sidebarAction } from '../redux/actions';
+import { Navigate } from 'react-router-dom';
+import {logoutAction} from '../redux/actions'
+import { connect } from 'react-redux';
 
 class StudentManagement extends Component {
     constructor(props) {
@@ -13,12 +17,14 @@ class StudentManagement extends Component {
             students: [],
             modalOpen: false,
             detail: {},
-            iduser: null
+            iduser: null,
+            redirect : false,
         }
     }
 
     componentDidMount() {
         this.getAttendance()
+        this.props.sidebarAction('/student-management')
     }
 
     getAttendance = () => {
@@ -123,7 +129,16 @@ class StudentManagement extends Component {
             })
     }
 
+    btnLogout =()=>{
+        this.setState({redirect:true});
+        localStorage.removeItem('data');
+        this.props.logoutAction(); 
+    }
+
     render() {
+        if(this.state.redirect){
+            return <Navigate to="/"/>
+        }
         return (
             <div className='mx-3'>
                 <ModalAttendance
@@ -135,7 +150,7 @@ class StudentManagement extends Component {
                 />
                 <div className='d-flex justify-content-between my-3'>
                     <h2>Students Attendance</h2>
-                    <Button type='button' color='danger' outline>Logout</Button>
+                    <Button type='button' color='danger' outline onClick={this.btnLogout}>Logout</Button>
                 </div>
                 <div className='d-flex justify-content-between my-2'>
                     <div>
@@ -185,7 +200,7 @@ class StudentManagement extends Component {
                     </div>
                 </div>
                 <div>
-                    <Table style={{width: '84vw'}}>
+                    <Table style={{ width: '84vw' }}>
                         <thead className='text-muted px-2'>
                             <tr>
                                 <th>
@@ -248,5 +263,11 @@ class StudentManagement extends Component {
         );
     }
 }
+const mapToProps = (state) => {
+    return {
+        session: state.sessionReducer.session
+    }
+}
 
-export default StudentManagement;
+
+export default connect(mapToProps,{logoutAction, sidebarAction}) (StudentManagement);

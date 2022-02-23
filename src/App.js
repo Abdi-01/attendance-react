@@ -4,7 +4,7 @@ import './App.css';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/Register';
 // import Dashboard from './pages/Dashboard';
-import { keepLogin } from './redux/actions'
+import { getSessionAction, keepLogin } from './redux/actions'
 import { getStudentSessionAction } from './redux/actions';
 import DashboardAttend from './pages/DashboardAttend';
 import StudentManagement from './pages/StudentsManagement';
@@ -24,6 +24,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.keepLogin();
+    this.props.getSessionAction();
   }
 
   render() {
@@ -69,4 +70,4 @@ const maptoprops = (state) => {
   }
 }
 
-export default connect(maptoprops, { keepLogin, getStudentSessionAction })(App);
+export default connect(maptoprops, { keepLogin, getStudentSessionAction, getSessionAction })(App);
