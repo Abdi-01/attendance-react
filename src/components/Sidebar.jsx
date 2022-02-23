@@ -14,7 +14,7 @@ class Sidebar extends React.Component {
     render() {
         console.log(window.location.pathname);
         return (
-            <ProSidebar className='bg-light' style={{ height: '100vh',marginRight: '25px' }}>
+            <ProSidebar className='bg-light' style={{ height: '100vh', marginRight: '25px' }}>
                 <SidebarHeader className='text-center' style={{ margin: "10%" }}>
                     <div>
                         <img src={this.props.data.photo} style={{ width: '50%', borderRadius: "50%" }} />
@@ -30,11 +30,11 @@ class Sidebar extends React.Component {
                             Dashboard
                         </Link></MenuItem>
                         <MenuItem >
-                        <Link to='/attendance'>
-                        Attendance List
-                        </Link>
+                            <Link to='/attendance'>
+                                Attendance List
+                            </Link>
                         </MenuItem>
-                        <MenuItem >My Profile</MenuItem>
+                        {/* <MenuItem >My Profile</MenuItem> */}
                         {
                             this.props.data.role == "admin" &&
                             <>
