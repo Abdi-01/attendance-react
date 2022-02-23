@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { Button } from 'reactstrap'
 import Clock from 'react-live-clock';
@@ -11,19 +10,20 @@ import axios from 'axios';
 import { API_URL } from '../helper';
 import Swal from 'sweetalert2';
 import { useSelector, useDispatch } from 'react-redux';
-import {logoutAction} from '../redux/actions';
+import { sidebarAction } from '../redux/actions';
+import { logoutAction } from '../redux/actions';
 import { Navigate } from 'react-router-dom';
 
 const DashboardAttend = (props) => {
-
+    let dispatch = useDispatch()
 
     let date = new Date()
     let tanggal = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
     const [calendar, setCalendar] = useState(new Date());
     const [attendanceStudent, setAttendanceStudent] = useState([]);
-    const [btnCheckOut,setBtnCheckOut] = useState(true);
+    const [btnCheckOut, setBtnCheckOut] = useState(true);
+    const [idattendance, setIdAttendance] = useState(null);
     const [redirect, setRedirect] = useState(false)
-
     //ambil data session student dari reducer
     const { dataSession } = useSelector((state) => {
         return {
@@ -33,47 +33,35 @@ const DashboardAttend = (props) => {
 
     useEffect(() => {
         getDataAttendance()
-    },[])
+        dispatch(sidebarAction('/dashboard'))
+    }, [])
 
-    const getDataAttendance = async() => {
-
+    const getDataAttendance = async () => {
         try {
-
             let token = localStorage.getItem('data');
-
-            if(token) {
-
-                let res = await axios.get(`${API_URL}/attendance/${tanggal}`,{
+            if (token) {
+                let res = await axios.get(`${API_URL}/attendance/${tanggal}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 })
-
-                if(res.data.dataAttendance.length > 0){
+                if (res.data.dataAttendance.length > 0) {
                     setAttendanceStudent(res.data.dataAttendance[0])
-                    
-                    if(res.data.dataAttendance[0].check_in) {
-                        
+                    if (res.data.dataAttendance[0].check_in) {
                         setBtnCheckOut(false)
-                        
-                        if(res.data.dataAttendance[0].check_out){
-                            
+                        if (res.data.dataAttendance[0].check_out) {
                             setBtnCheckOut(true)
-                            
                         } else {
-                            
                             setBtnCheckOut(false)
                         }
                     }
-                } 
+                }
             }
 
         } catch (error) {
             console.log(error)
         }
     }
-
-    let dispatch = useDispatch();
 
     const onBtCheckIn = async () => {
 
@@ -87,23 +75,18 @@ const DashboardAttend = (props) => {
         try {
             let token = localStorage.getItem('data');
             if (token) {
-
                 let res = await axios.post(`${API_URL}/attendance/checkin`, data, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 })
-
                 if (res.data.success) {
-
                     getDataAttendance()
-
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
                         text: 'Success Checkin'
                     })
-                    
                 }
             }
         } catch (error) {
@@ -111,26 +94,22 @@ const DashboardAttend = (props) => {
         }
     }
 
-    const btnLogout =()=>{
+    const btnLogout = () => {
         setRedirect(true);
         localStorage.removeItem('data');
         dispatch(logoutAction());
-        
+
     }
 
     const onBtCheckOut = async () => {
 
         let time = new Date()
         let checkout = time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
-        console.log('isi checkout =>', checkout)
-        // let data = {
-        //     checkout: checkout
-        // }
         try {
             let token = localStorage.getItem('data');
 
-            if(token) {
-                let res = await axios.patch(`${API_URL}/attendance/checkout/${attendanceStudent.idattendance}`, {checkout}, {
+            if (token) {
+                let res = await axios.patch(`${API_URL}/attendance/checkout/${attendanceStudent.idattendance}`, { checkout }, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -139,7 +118,7 @@ const DashboardAttend = (props) => {
                 if (res.data.success) {
 
                     getDataAttendance()
-                    
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -154,9 +133,9 @@ const DashboardAttend = (props) => {
         }
     }
 
-    if(redirect){
-        return <Navigate to='/'/>
-    }else {
+    if (redirect) {
+        return <Navigate to='/' />
+    } else {
         return (
             <div className='row g-0 mt-5'>
                 {console.log('isi datasession', dataSession)}
@@ -183,7 +162,7 @@ const DashboardAttend = (props) => {
                             </div>
                             <div className='d-flex justify-content-evenly'>
                                 <div>
-                                    <Button color='info' onClick={onBtCheckIn}  disabled={attendanceStudent.check_in ? true : false}>Checkin</Button>
+                                    <Button color='info' onClick={onBtCheckIn} disabled={attendanceStudent.check_in ? true : false}>Checkin</Button>
                                 </div>
                                 <div>
                                     <Button color='danger' onClick={onBtCheckOut} disabled={btnCheckOut}>Checkout</Button>

@@ -10,7 +10,9 @@ class Sidebar extends React.Component {
         super(props);
         this.state = {}
     }
+
     render() {
+        console.log(window.location.pathname);
         return (
             <ProSidebar className='bg-light' style={{ height: '100vh',marginRight: '25px' }}>
                 <SidebarHeader className='text-center' style={{ margin: "10%" }}>
@@ -24,30 +26,34 @@ class Sidebar extends React.Component {
                 </SidebarHeader>
                 <SidebarContent>
                     <Menu>
-                        <MenuItem ><Link to='/dashboard'>
+                        <MenuItem ><Link style={{ color: this.props.pathname == '/dashboard' ? 'skyblue' : 'white' }} to='/dashboard'>
                             Dashboard
                         </Link></MenuItem>
-                        <MenuItem >Attendance List</MenuItem>
+                        <MenuItem >
+                        <Link to='/attendance'>
+                        Attendance List
+                        </Link>
+                        </MenuItem>
                         <MenuItem >My Profile</MenuItem>
                         {
                             this.props.data.role == "admin" &&
                             <>
-                                <MenuItem >Student Attendance</MenuItem>
+                                <MenuItem style={{ color: this.props.pathname == '' ? 'skyblue' : 'white' }} >Student Attendance</MenuItem>
                                 <MenuItem >
-                                    <Link to='/session'>
+                                    <Link style={{ color: this.props.pathname == '/session' ? 'skyblue' : 'white' }} to='/session'>
                                         Sessions
                                     </Link>
                                 </MenuItem>
                                 <MenuItem >
-                                    <Link to='/register'>
+                                    <Link style={{ color: this.props.pathname == '/register' ? 'skyblue' : 'white' }} to='/register'>
                                         Registration Student
                                     </Link>
                                 </MenuItem>
-                           <MenuItem >
-                                         <Link to='/student-management'>
-                                          Student Attendance
-                                              </Link>
-                                            </MenuItem>
+                                <MenuItem >
+                                    <Link style={{ color: this.props.pathname == '/student-management' ? 'skyblue' : 'white' }} to='/student-management'>
+                                        Student Attendance
+                                    </Link>
+                                </MenuItem>
                             </>
                         }
                     </Menu>
@@ -61,6 +67,7 @@ class Sidebar extends React.Component {
 const maptoprops = (state) => {
     return {
         data: state.userReducer,
+        pathname: state.userReducer.pathname
     }
 }
 
