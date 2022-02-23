@@ -47,7 +47,7 @@ const DashboardAttend = () => {
 
                 let res = await axios.post(`${API_URL}/attendance/checkin`,data,{
                     headers: {
-                        'Athorization' : `Bearer ${token}`
+                        'Authorization' : `Bearer ${token}`
                     }
                 })
 

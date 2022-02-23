@@ -5,6 +5,9 @@ import { API_URL } from '../helper';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import ModalAttendance from '../components/ModalAttendance';
+import { Navigate } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logoutAction } from '../redux/actions'
 
 class StudentManagement extends Component {
     constructor(props) {
@@ -13,7 +16,8 @@ class StudentManagement extends Component {
             students: [],
             modalOpen: false,
             detail: {},
-            iduser: null
+            iduser: null,
+            redirect: false
         }
     }
 
@@ -30,6 +34,12 @@ class StudentManagement extends Component {
             .catch(err => {
                 console.log(err)
             })
+    }
+
+    btnLogout = () => {
+        this.setState({ redirect: true });
+        localStorage.removeItem('data');
+        this.props.logoutAction();
     }
 
     filterBtn = () => {
@@ -124,6 +134,10 @@ class StudentManagement extends Component {
     }
 
     render() {
+        console.log('redirect', this.state.redirect)
+        if (this.state.redirect) {
+            return <Navigate to='/' />
+        }
         return (
             <div className='mx-3'>
                 <ModalAttendance
@@ -135,7 +149,7 @@ class StudentManagement extends Component {
                 />
                 <div className='d-flex justify-content-between my-3'>
                     <h2>Students Attendance</h2>
-                    <Button type='button' color='danger' outline>Logout</Button>
+                    <Button type='button' color='danger' outline onClick={this.btnLogout}>Logout</Button>
                 </div>
                 <div className='d-flex justify-content-between my-2'>
                     <div>
@@ -185,7 +199,7 @@ class StudentManagement extends Component {
                     </div>
                 </div>
                 <div>
-                    <Table style={{width: '84vw'}}>
+                    <Table style={{ width: '84vw' }}>
                         <thead className='text-muted px-2'>
                             <tr>
                                 <th>
@@ -249,4 +263,10 @@ class StudentManagement extends Component {
     }
 }
 
-export default StudentManagement;
+const mapToProps = (state) => {
+    return {
+        data: state.userReducer,
+    }
+}
+
+export default connect(mapToProps, { logoutAction })(StudentManagement);

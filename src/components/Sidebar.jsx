@@ -32,7 +32,6 @@ class Sidebar extends React.Component {
                         {
                             this.props.data.role == "admin" &&
                             <>
-                                <MenuItem >Student Attendance</MenuItem>
                                 <MenuItem >
                                     <Link to='/session'>
                                         Sessions
