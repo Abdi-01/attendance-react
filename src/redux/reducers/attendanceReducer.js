@@ -5,9 +5,10 @@ const INITIAL_STATE = {
 export const attendanceReducer = (state=INITIAL_STATE, action) => {
     switch (action.type) {
         case 'GET_SESSION_STUDENT_SUCCESS':
+            console.log('isi action.payload', action.payload)
             return {
                 ...state,
-                dataSesionStudent: action.payload
+                dataSessionStudent: action.payload
             }
     
         default:
