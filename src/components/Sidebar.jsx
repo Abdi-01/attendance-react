@@ -38,7 +38,6 @@ class Sidebar extends React.Component {
                         {
                             this.props.data.role == "admin" &&
                             <>
-                                <MenuItem style={{ color: this.props.pathname == '' ? 'skyblue' : 'white' }} >Student Attendance</MenuItem>
                                 <MenuItem >
                                     <Link style={{ color: this.props.pathname == '/session' ? 'skyblue' : 'white' }} to='/session'>
                                         Sessions

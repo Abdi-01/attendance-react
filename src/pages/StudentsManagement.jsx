@@ -5,10 +5,10 @@ import { API_URL } from '../helper';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import ModalAttendance from '../components/ModalAttendance';
-import { sidebarAction } from '../redux/actions';
 import { Navigate } from 'react-router-dom';
-import {logoutAction} from '../redux/actions'
 import { connect } from 'react-redux';
+import { logoutAction } from '../redux/actions'
+import { sidebarAction } from '../redux/actions';
 
 class StudentManagement extends Component {
     constructor(props) {
@@ -18,7 +18,7 @@ class StudentManagement extends Component {
             modalOpen: false,
             detail: {},
             iduser: null,
-            redirect : false,
+            redirect: false
         }
     }
 
@@ -36,6 +36,12 @@ class StudentManagement extends Component {
             .catch(err => {
                 console.log(err)
             })
+    }
+
+    btnLogout = () => {
+        this.setState({ redirect: true });
+        localStorage.removeItem('data');
+        this.props.logoutAction();
     }
 
     filterBtn = () => {
@@ -129,15 +135,15 @@ class StudentManagement extends Component {
             })
     }
 
-    btnLogout =()=>{
-        this.setState({redirect:true});
+    btnLogout = () => {
+        this.setState({ redirect: true });
         localStorage.removeItem('data');
-        this.props.logoutAction(); 
+        this.props.logoutAction();
     }
 
     render() {
-        if(this.state.redirect){
-            return <Navigate to="/"/>
+        if (this.state.redirect) {
+            return <Navigate to="/" />
         }
         return (
             <div className='mx-3'>
@@ -263,11 +269,12 @@ class StudentManagement extends Component {
         );
     }
 }
+
 const mapToProps = (state) => {
     return {
+        data: state.userReducer,
         session: state.sessionReducer.session
     }
 }
 
-
-export default connect(mapToProps,{logoutAction, sidebarAction}) (StudentManagement);
+export default connect(mapToProps, { logoutAction, sidebarAction })(StudentManagement);
