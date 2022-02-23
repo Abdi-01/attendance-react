@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getStudentSessionAction } from ".";
 import { API_URL } from "../../helper";
 
 
@@ -43,6 +44,8 @@ export const keepLogin = () => {
                         type: 'LOGIN_SUCCESS',
                         payload: res.data.dataKeep
                     })
+
+                    dispatch(getStudentSessionAction())
                     return { success: res.data.success }
                 }
             }
@@ -70,7 +73,7 @@ export const sidebarAction = (url) => {
     return async (dispatch) => {
         try {
             dispatch({
-                type:'GET_PATHNAME',
+                type: 'GET_PATHNAME',
                 payload: url
             })
         } catch (error) {

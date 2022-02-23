@@ -14,7 +14,7 @@ class Sidebar extends React.Component {
     render() {
         console.log(window.location.pathname);
         return (
-            <ProSidebar className='bg-light' style={{ height: '100vh' }}>
+            <ProSidebar className='bg-light' style={{ height: '100vh',marginRight: '25px' }}>
                 <SidebarHeader className='text-center' style={{ margin: "10%" }}>
                     <div>
                         <img src={this.props.data.photo} style={{ width: '50%', borderRadius: "50%" }} />
