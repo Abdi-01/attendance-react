@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, InputGroup, Input, InputGroupText, Label } from 'reactstrap';
 import Swal from 'sweetalert2';
 import { Navigate } from 'react-router-dom';
-import {loginAction, getStudentSessionAction} from '../redux/actions'
+import {loginAction} from '../redux/actions'
 import { connect } from 'react-redux';
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
@@ -34,7 +34,6 @@ class LoginPage extends React.Component {
     render() {
         // untuk redirect ke halaman selanjutnya
         if (this.state.redirect) {
-            this.props.getStudentSessionAction()
             return <Navigate to='/dashboard' />
         }
         return (
@@ -67,4 +66,4 @@ const maptoprops=(state)=>{
     }
 }
 
-export default connect(maptoprops,{loginAction, getStudentSessionAction}) (LoginPage);
+export default connect(maptoprops,{loginAction}) (LoginPage);

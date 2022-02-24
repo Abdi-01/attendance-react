@@ -5,7 +5,6 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/Register';
 // import Dashboard from './pages/Dashboard';
 import { getSessionAction, keepLogin } from './redux/actions'
-import { getStudentSessionAction } from './redux/actions';
 import DashboardAttend from './pages/DashboardAttend';
 import StudentManagement from './pages/StudentsManagement';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -70,4 +69,4 @@ const maptoprops = (state) => {
   }
 }
 
-export default connect(maptoprops, { keepLogin, getStudentSessionAction, getSessionAction })(App);
+export default connect(maptoprops, { keepLogin, getSessionAction })(App);

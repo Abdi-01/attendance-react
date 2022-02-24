@@ -22,12 +22,10 @@ const DashboardAttend = (props) => {
     const [calendar, setCalendar] = useState(new Date());
     const [attendanceStudent, setAttendanceStudent] = useState([]);
     const [btnCheckOut, setBtnCheckOut] = useState(true);
-    const [idattendance, setIdAttendance] = useState(null);
     const [redirect, setRedirect] = useState(false)
     //ambil data session student dari reducer
-    const { dataSession, userData } = useSelector((state) => {
+    const { userData } = useSelector((state) => {
         return {
-            dataSession: state.attendanceReducer.dataSessionStudent,
             userData: state.userReducer
         }
     })
@@ -113,15 +111,12 @@ const DashboardAttend = (props) => {
                 })
 
                 if (res.data.success) {
-
                     getDataAttendance()
-
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
                         text: 'Success Checkout'
                     })
-
                 }
             }
 
@@ -135,7 +130,6 @@ const DashboardAttend = (props) => {
     } else {
         return (
             <div className='row g-0 mt-5'>
-                {console.log('isi datasession', dataSession)}
                 <div className="col-7">
                     <div>
                         <h3>Dashboard</h3>
@@ -172,21 +166,21 @@ const DashboardAttend = (props) => {
                                     <img src={iconCheckIn} alt="" />
                                     <div className='mt-3'>
                                         <p style={{ margin: 0 }}>Check In</p>
-                                        <p style={{ margin: 0 }}>{dataSession.timein}</p>
+                                        <p style={{ margin: 0, textAlign: 'center' }}>{attendanceStudent.check_in ? attendanceStudent.check_in : `--:--:--`}</p>
                                     </div>
                                 </div>
-                                <div className="d-flex">
+                                <div className="d-flex mx-2">
                                     <img src={iconSession} alt="" />
                                     <div className='mt-3'>
                                         <p style={{ margin: 0 }}>Session</p>
-                                        <p style={{ margin: 0 }}>{userData.session}</p>
+                                        <p style={{ margin: 0, textAlign: 'center' }}>{userData.session}</p>
                                     </div>
                                 </div>
                                 <div className="d-flex">
                                     <img src={iconCheckOut} alt="" />
                                     <div className='mt-3'>
-                                        <p style={{ margin: 0 }}>Checkout</p>
-                                        <p style={{ margin: 0 }}>{dataSession.timeout}</p>
+                                        <p style={{ margin: 0 }}>Check out</p>
+                                        <p style={{ margin: 0, textAlign: 'center' }}>{attendanceStudent.check_out ? attendanceStudent.check_out : `--:--:--`}</p>
                                     </div>
                                 </div>
                             </div>
