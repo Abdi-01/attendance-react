@@ -3,7 +3,8 @@ import { Button, DropdownItem, DropdownMenu, DropdownToggle, Table, Uncontrolled
 import axios from 'axios'
 import { API_URL } from '../helper'
 import { MdSort, MdOutlineFilterAlt } from 'react-icons/md';
-
+import { connect } from 'react-redux';
+import { sidebarAction } from '../redux/actions';
 
 class AttendancePage extends React.Component {
     constructor(props) {
@@ -15,8 +16,10 @@ class AttendancePage extends React.Component {
 
     componentDidMount() {
         this.getAttendance()
-    }
+        this.props.sidebarAction('/attendance')
 
+    }
+    
     getAttendance = () => {
         let token = localStorage.getItem("data");
         if (token) {
@@ -101,7 +104,7 @@ class AttendancePage extends React.Component {
     resetBtn = () => {
         this.inSearchStartDate.value = null
         this.inSearchEndDate.value = null
-        this.state.dataAttendance=this.getAttendance()
+        this.state.dataAttendance = this.getAttendance()
     }
 
     render() {
@@ -193,5 +196,9 @@ class AttendancePage extends React.Component {
         );
     }
 }
-
-export default AttendancePage;
+const mapToProps = (state) => {
+    return {
+        session: state.sessionReducer.session
+    }
+}
+export default connect(mapToProps,{sidebarAction}) (AttendancePage);
