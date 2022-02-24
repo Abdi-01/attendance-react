@@ -64,6 +64,21 @@ class ModalAttendance extends Component {
         }
     }
 
+    filterBtn = () => {
+        if (this.inSearchStartDate.value && this.inSearchEndDate.value) {
+            axios.get(`${API_URL}/student?start_date=${this.inSearchStartDate.value}&end_date=${this.inSearchEndDate.value}`)
+                .then(res => {
+                    console.log(res.data.getAttendance)
+                    this.setState({ attendance: res.data.getAttendance })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        } else {
+            return alert('Fill all column')
+        }
+    }
+
     handleSortDesc = () => {
         axios.get(`${API_URL}/attendance/${this.props.iduser}/?_sort=date&_order=desc`)
             .then(res => {
@@ -120,7 +135,8 @@ class ModalAttendance extends Component {
                                 <DropdownMenu className='px-2'>
                                     <div className='my-3'>
                                         <Label>Filter By</Label>
-                                        <Input className='my-2' placeholder='Date Range' />
+                                        <Input type='date' className='my-2' placeholder='Start Date' innerRef = {(element) => this.inSearchStartDate = element} />
+                                        <Input type='date' className='my-2' placeholder='End Date' innerRef={(element) => this.inSearchEndDate = element} />
                                     </div>
                                     <div>
                                         <Button color='primary'>Filter</Button>
