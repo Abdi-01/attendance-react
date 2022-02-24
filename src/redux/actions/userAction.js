@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getStudentSessionAction } from ".";
 import { API_URL } from "../../helper";
 
 
@@ -45,7 +44,6 @@ export const keepLogin = () => {
                         payload: res.data.dataKeep
                     })
 
-                    dispatch(getStudentSessionAction())
                     return { success: res.data.success }
                 }
             }
