@@ -36,7 +36,10 @@ class App extends React.Component {
         }
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path='/dashboard' element={<DashboardAttend />} />
+          {
+            this.props.data.fullname &&
+            <Route path='/dashboard' element={<DashboardAttend />} />
+          }
           {
             this.props.data.role == "admin" ?
               <>
