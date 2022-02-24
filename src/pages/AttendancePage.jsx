@@ -5,6 +5,7 @@ import { API_URL } from '../helper'
 import { MdSort, MdOutlineFilterAlt } from 'react-icons/md';
 import { connect } from 'react-redux';
 import { sidebarAction } from '../redux/actions';
+import moment from 'moment';
 
 class AttendancePage extends React.Component {
     constructor(props) {
@@ -170,10 +171,11 @@ class AttendancePage extends React.Component {
                             <tbody className='px-2'>
                                 {
                                     this.state.dataAttendance.map((item, index) => {
+                                        let newDate = moment(item.date).format('LL') 
                                         return (
                                             <tr key={index} >
                                                 <td>
-                                                    {item.date}
+                                                    {newDate}
                                                 </td>
                                                 <td>
                                                     {item.check_in}
