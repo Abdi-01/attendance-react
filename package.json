@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@react-icons/all-files": "^4.1.0",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.4.2",
     "@mui/material": "^5.4.2",
+    "@react-icons/all-files": "^4.1.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",
     "@testing-library/user-event": "^13.5.0",
@@ -35,8 +35,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "transfer":"rsync -avP build/ root@103.157.96.90:/var/www/attendance.com/",
-    "deploy":"npm run build && npm run transfer",
+    "transfer": "rsync -avP build/ root@103.157.96.90:/var/www/attendance.com/",
+    "deploy": "npm run build && npm run transfer",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
