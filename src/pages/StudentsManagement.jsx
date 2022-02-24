@@ -8,6 +8,7 @@ import ModalAttendance from '../components/ModalAttendance';
 import { Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logoutAction } from '../redux/actions'
+import { sidebarAction } from '../redux/actions';
 
 class StudentManagement extends Component {
     constructor(props) {
@@ -23,6 +24,7 @@ class StudentManagement extends Component {
 
     componentDidMount() {
         this.getAttendance()
+        this.props.sidebarAction('/student-management')
     }
 
     getAttendance = () => {
@@ -143,6 +145,7 @@ class StudentManagement extends Component {
             })
     }
 
+
     printStudents = () => {
         return this.state.students.map((item, index) => {
             return (
@@ -173,10 +176,15 @@ class StudentManagement extends Component {
         })
     }
 
+    btnLogout = () => {
+        this.setState({ redirect: true });
+        localStorage.removeItem('data');
+        this.props.logoutAction();
+    }
+
     render() {
-        console.log('redirect', this.state.redirect)
         if (this.state.redirect) {
-            return <Navigate to='/' />
+            return <Navigate to="/" />
         }
         return (
             <div className='mx-3'>
@@ -278,7 +286,8 @@ class StudentManagement extends Component {
 const mapToProps = (state) => {
     return {
         data: state.userReducer,
+        session: state.sessionReducer.session
     }
 }
 
-export default connect(mapToProps, { logoutAction })(StudentManagement);
+export default connect(mapToProps, { logoutAction, sidebarAction })(StudentManagement);
