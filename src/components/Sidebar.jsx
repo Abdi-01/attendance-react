@@ -30,7 +30,7 @@ class Sidebar extends React.Component {
                             Dashboard
                         </Link></MenuItem>
                         <MenuItem >
-                            <Link style={{ color: this.props.pathname == '/dashboard' ? 'skyblue' : 'white' }} to='/attendance'>
+                            <Link style={{ color: this.props.pathname == '/attendance' ? 'skyblue' : 'white' }} to='/attendance'>
                                 Attendance List
                             </Link>
                         </MenuItem>
