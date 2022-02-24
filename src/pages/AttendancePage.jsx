@@ -3,73 +3,108 @@ import { Button, DropdownItem, DropdownMenu, DropdownToggle, Table, Uncontrolled
 import axios from 'axios'
 import { API_URL } from '../helper'
 import { MdSort, MdOutlineFilterAlt } from 'react-icons/md';
-
-
-
+import { connect } from 'react-redux';
+import { sidebarAction } from '../redux/actions';
 
 class AttendancePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            attendance: []
+            dataAttendance: []
         }
     }
 
     componentDidMount() {
         this.getAttendance()
-    }
+        this.props.sidebarAction('/attendance')
 
+    }
+    
     getAttendance = () => {
-        axios.get(`${API_URL}/attendance`)
-            .then(res => {
-                console.log(res.data.getAttendance)
-                this.setState({ attendance: res.data.getAttendance })
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
+        let token = localStorage.getItem("data");
+        if (token) {
+            console.log(token)
 
-    getDateAsc = () => {
-        axios.get(`${API_URL}/attendance?_sort=date&_order=asc`)
-            .then(res => {
-                console.log(res.data.getAttendance)
-                this.setState({ attendance: res.data.getAttendance })
+            axios.get(`${API_URL}/attendance/student`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             })
-            .catch(err => {
-                console.log(err)
-            })
-    }
-
-    getDateDesc = () => {
-        axios.get(`${API_URL}/attendance?_sort=date&_order=desc`)
-            .then(res => {
-                console.log(res.data.getAttendance)
-                this.setState({ attendance: res.data.getAttendance })
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
-
-    filterBtn = () => {
-        if (this.inSearchStartDate.value && this.inSearchEndDate.value) {
-            console.log('ini nama dan nis')
-            axios.get(`${API_URL}/attendance?start_date=${this.inSearchStartDate.value}&end_date=${this.inSearchEndDate.value}`)
                 .then(res => {
-                    console.log(res.data.getAttendance)
-                    this.setState({ attendance: res.data.getAttendance })
+                    console.log(res.data.dataAttendance)
+                    this.setState({ dataAttendance: res.data.dataAttendance })
                 })
                 .catch(err => {
                     console.log(err)
                 })
-        } else {
-            return alert('Harus Isi Semua Kelom')
+        }
+    }
+
+    getDateAsc = () => {
+        let token = localStorage.getItem("data");
+        if (token) {
+
+            axios.get(`${API_URL}/attendance/student?_sort=date&_order=asc`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(res => {
+                    console.log(res.data.dataAttendance)
+                    this.setState({ dataAttendance: res.data.dataAttendance })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+    }
+
+    getDateDesc = () => {
+        let token = localStorage.getItem("data");
+        if (token) {
+
+            axios.get(`${API_URL}/attendance/student?_sort=date&_order=desc`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(res => {
+                    console.log(res.data.dataAttendance)
+                    this.setState({ dataAttendance: res.data.dataAttendance })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+    }
+
+    filterBtn = () => {
+        let token = localStorage.getItem("data");
+        if (token) {
+
+            if (this.inSearchStartDate.value && this.inSearchEndDate.value) {
+                console.log('ini nama dan nis')
+                axios.get(`${API_URL}/attendance/student?start_date=${this.inSearchStartDate.value}&end_date=${this.inSearchEndDate.value}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                    .then(res => {
+                        console.log(res.data.dataAttendance)
+                        this.setState({ dataAttendance: res.data.dataAttendance })
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            } else {
+                return alert('Harus Isi Semua Kelom')
+            }
         }
     }
     resetBtn = () => {
         this.inSearchStartDate.value = null
         this.inSearchEndDate.value = null
+        this.state.dataAttendance = this.getAttendance()
     }
 
     render() {
@@ -77,7 +112,7 @@ class AttendancePage extends React.Component {
             <div className='container-fluid'>
                 <div className='d-flex p-4' style={{ justifyContent: "space-between" }}>
                     <h2>Attendance List</h2>
-                    <Button color="danger" outline style={{ width: "120px", borderRadius:"10px" }}>Logout</Button>
+                    <Button color="danger" outline style={{ width: "120px", borderRadius: "10px" }}>Logout</Button>
                 </div>
                 <div style={{ border: "1px  grey", height: "80vh", justifyContent: "space-between", }}>
                     <div className='d-flex p-4'>
@@ -85,10 +120,10 @@ class AttendancePage extends React.Component {
                             <h4>Your Attendance</h4>
                         </div>
                         {/* </div> */}
-                        <div className='d-flex' style={{marginLeft:"auto" }}>
-                            <div style={{ cursor: 'pointer', paddingRight:"10px"}}>
+                        <div className='d-flex' style={{ marginLeft: "auto" }}>
+                            <div style={{ cursor: 'pointer', paddingRight: "10px" }}>
                                 <UncontrolledDropdown>
-                                    <DropdownToggle caret size='sm' outline style={{borderRadius:"10px"}}>
+                                    <DropdownToggle caret size='sm' outline style={{ borderRadius: "10px" }}>
                                         <MdSort /> Sort
                                     </DropdownToggle>
                                     <DropdownMenu>
@@ -103,13 +138,13 @@ class AttendancePage extends React.Component {
                             </div>
                             <div className='d-flex' style={{ cursor: 'pointer' }}>
                                 <UncontrolledDropdown>
-                                    <DropdownToggle caret size='sm' outline style={{borderRadius:"10px"}}>
+                                    <DropdownToggle caret size='sm' outline style={{ borderRadius: "10px" }}>
                                         <MdOutlineFilterAlt />Filter
                                     </DropdownToggle>
                                     <DropdownMenu className='px-2'>
                                         <div className='my-3'>
                                             <Label>Filter By</Label>
-                                            <Input  type='date' placeholder='Start Date' innerRef={(element) => this.inSearchStartDate = element} />
+                                            <Input type='date' placeholder='Start Date' innerRef={(element) => this.inSearchStartDate = element} />
                                             <Input placeholder='End Date' type='date' innerRef={(element) => this.inSearchEndDate = element} />
                                         </div>
 
@@ -134,17 +169,17 @@ class AttendancePage extends React.Component {
                             </thead>
                             <tbody className='px-2'>
                                 {
-                                    this.state.attendance.map((item, index) => {
+                                    this.state.dataAttendance.map((item, index) => {
                                         return (
                                             <tr key={index} >
                                                 <td>
                                                     {item.date}
                                                 </td>
                                                 <td>
-                                                    {item.checkin}
+                                                    {item.check_in}
                                                 </td>
                                                 <td>
-                                                    {item.checkout}
+                                                    {item.check_out}
                                                 </td>
                                                 <td>
                                                     {item.status}
@@ -161,5 +196,9 @@ class AttendancePage extends React.Component {
         );
     }
 }
-
-export default AttendancePage;
+const mapToProps = (state) => {
+    return {
+        session: state.sessionReducer.session
+    }
+}
+export default connect(mapToProps,{sidebarAction}) (AttendancePage);

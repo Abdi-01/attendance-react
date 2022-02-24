@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 import { Button, FormGroup, Input, Label, Table } from 'reactstrap'
 import SidebarComp from '../components/Sidebar';
 import { API_URL } from '../helper';
-import { deleteSession, getSessionAction } from '../redux/actions';
+import { deleteSession, getSessionAction, sidebarAction } from '../redux/actions';
 import {logoutAction} from '../redux/actions'
 class ManageSession extends React.Component {
     constructor(props) {
@@ -15,8 +15,10 @@ class ManageSession extends React.Component {
             redirect : false
         }
     }
+    
     componentDidMount() {
         this.props.getSessionAction()
+        this.props.sidebarAction('/session')
     }
     printSession = () => {
         return this.props.session.map((value, index) => {
@@ -176,4 +178,4 @@ const mapToProps = (state) => {
         session: state.sessionReducer.session
     }
 }
-export default connect(mapToProps, { getSessionAction, deleteSession, logoutAction })(ManageSession);
+export default connect(mapToProps, { getSessionAction, deleteSession,sidebarAction, logoutAction })(ManageSession);
