@@ -153,7 +153,7 @@ class ModalAttendance extends Component {
                             <Col className='col-md-4'>
                                 <div className='row'>
                                     <div className='col-md-6' >
-                                        <img src="https://www.leadershipmartialartsct.com/wp-content/uploads/2017/04/default-image.jpg" width="100%" />
+                                        <img src={this.props.detailStudent.photo} width="100%" />
                                     </div>
                                     <div className='col-md-6' >
                                         <Label className='text-muted' style={{ fontSize: 12 }}>
