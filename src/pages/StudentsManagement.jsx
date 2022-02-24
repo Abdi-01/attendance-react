@@ -37,6 +37,16 @@ class StudentManagement extends Component {
                 console.log(err)
             })
     }
+    btnReset = () => {
+        axios.get(`${API_URL}/attendance`)
+            .then(res => {
+                console.log(res.data.dataStudents)
+                this.setState({ students: res.data.dataStudents })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
 
     btnLogout = () => {
         this.setState({ redirect: true });
@@ -135,6 +145,37 @@ class StudentManagement extends Component {
             })
     }
 
+
+    printStudents = () => {
+        return this.state.students.map((item, index) => {
+            return (
+                <tr key={index}>
+                    <td>
+                        {index + 1}
+                    </td>
+                    <td>
+                        {item.nis}
+                    </td>
+                    <td>
+                        {item.fullname}
+                    </td>
+                    <td>
+                        {item.email}
+                    </td>
+                    <td>
+                        {item.phone}
+                    </td>
+                    <td>
+                        {item.session}
+                    </td>
+                    <td>
+                        <Button outline color='warning' onClick={() => this.setState({ modalOpen: !this.state.modalOpen, detail: item, iduser: item.iduser })}>Detail</Button>
+                    </td>
+                </tr>
+            )
+        })
+    }
+
     btnLogout = () => {
         this.setState({ redirect: true });
         localStorage.removeItem('data');
@@ -198,7 +239,7 @@ class StudentManagement extends Component {
 
                                     <div>
                                         <Button color='primary' onClick={this.filterBtn}>Filter</Button>
-                                        <Button color='warning'>Reset</Button>
+                                        <Button color='warning' onClick={this.btnReset}>Reset</Button>
                                     </div>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
@@ -233,35 +274,7 @@ class StudentManagement extends Component {
                             </tr>
                         </thead>
                         <tbody className='px-2'>
-                            {
-                                this.state.students.map((item, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td>
-                                                {item.iduser}
-                                            </td>
-                                            <td>
-                                                {item.nis}
-                                            </td>
-                                            <td>
-                                                {item.fullname}
-                                            </td>
-                                            <td>
-                                                {item.email}
-                                            </td>
-                                            <td>
-                                                {item.phone}
-                                            </td>
-                                            <td>
-                                                {item.session}
-                                            </td>
-                                            <td>
-                                                <Button outline color='warning' onClick={() => this.setState({ modalOpen: !this.state.modalOpen, detail: item, iduser: item.iduser })}>Detail</Button>
-                                            </td>
-                                        </tr>
-                                    )
-                                })
-                            }
+                            {this.printStudents()}
                         </tbody>
                     </Table>
                 </div>
