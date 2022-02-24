@@ -14,7 +14,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
                 INITIAL_STATE
             }
         case "GET_PATHNAME":
-            console.log(action.payload)
+            console.log("pathname",action.payload)
             return {
                 ...state,pathname: action.payload
             }

@@ -25,9 +25,10 @@ const DashboardAttend = (props) => {
     const [idattendance, setIdAttendance] = useState(null);
     const [redirect, setRedirect] = useState(false)
     //ambil data session student dari reducer
-    const { dataSession } = useSelector((state) => {
+    const { dataSession, userData } = useSelector((state) => {
         return {
-            dataSession: state.attendanceReducer.dataSessionStudent
+            dataSession: state.attendanceReducer.dataSessionStudent,
+            userData: state.userReducer
         }
     })
 
@@ -57,17 +58,14 @@ const DashboardAttend = (props) => {
                     }
                 }
             }
-
         } catch (error) {
             console.log(error)
         }
     }
 
     const onBtCheckIn = async () => {
-
         let time = new Date()
         let checkin = time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
-
         let data = {
             date: tanggal,
             checkin: checkin
@@ -77,7 +75,7 @@ const DashboardAttend = (props) => {
             if (token) {
                 let res = await axios.post(`${API_URL}/attendance/checkin`, data, {
                     headers: {
-                        'Authorization' : `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`
                     }
                 })
                 if (res.data.success) {
@@ -102,7 +100,6 @@ const DashboardAttend = (props) => {
     }
 
     const onBtCheckOut = async () => {
-
         let time = new Date()
         let checkout = time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
         try {
@@ -182,7 +179,7 @@ const DashboardAttend = (props) => {
                                     <img src={iconSession} alt="" />
                                     <div className='mt-3'>
                                         <p style={{ margin: 0 }}>Session</p>
-                                        <p style={{ margin: 0 }}>{dataSession.session}</p>
+                                        <p style={{ margin: 0 }}>{userData.session}</p>
                                     </div>
                                 </div>
                                 <div className="d-flex">
@@ -206,10 +203,10 @@ const DashboardAttend = (props) => {
                                 <img src={iconAvaVespa} alt="" />
                             </div>
                             {
-                                dataSession.fullname
+                                userData.fullname
                                     ?
                                     <div className='pt-4' >
-                                        <h6 style={{ color: 'white', fontWeight: 'bold' }}>Welcome to the class {dataSession.fullname.split(' ')[0]} </h6>
+                                        <h6 style={{ color: 'white', fontWeight: 'bold' }}>Welcome to the class {userData.fullname.split(' ')[0]} </h6>
                                         <p style={{ color: "white", fontSize: '13px' }}>don't forget to attendance</p>
                                     </div>
                                     :
